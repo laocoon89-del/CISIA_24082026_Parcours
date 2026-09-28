@@ -1,6 +1,6 @@
-# Jalon actuel : 00-reconstruction-fin-sprint2
+# Jalon actuel : 01-j1-matin-m23
 
-Reconstruction de depart operationnelle, avant toute activite en salle du Sprint 3.
+Etat revele pour J1 matin : reconstruction operationnelle S2 et activite M23.
 
 - Source locale de provenance : starter remis au precedent groupe au demarrage
   du Sprint 3, commit historique `0d02af0`.
