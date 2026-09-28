@@ -74,3 +74,22 @@ jobs:
         # [PÉDAGOGIE] COMMANDE — elle s'exécute dans le shell du runner et son code de sortie
         # [PÉDAGOGIE] porte le verdict.
         run: uv run pytest -q
+
+  # M24 TP 2 — construit le paquet seulement si `quality` est vert (needs), puis publie le wheel.
+  build:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@v3
+      - name: Build wheel
+        run: uv build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: indusense-wheel
+          path: dist/*.whl
+
