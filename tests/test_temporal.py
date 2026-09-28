@@ -75,3 +75,45 @@ def test_temporal_features_missing_column_raises():
     # [PÉDAGOGIE] en cas d'exception.
     with pytest.raises(ValueError):
         add_temporal_features(df, value_cols=("temperature",))
+
+
+# TP2 M23 — test de perturbation : modifier la valeur à l'instant t ne doit changer aucune
+# feature de la ligne t (sinon la feature « voit » la valeur qu'elle sert à anticiper).
+def test_temporal_features_ignore_current_value_perturbation():
+    base = pd.DataFrame(
+        {
+            "machine": ["MACH-01"] * 6,
+            "timestamp": pd.date_range("2025-01-01", periods=6, freq="h"),
+            "temperature": [10.0, 20.0, 30.0, 40.0, 50.0, 60.0],
+        }
+    )
+    perturbed = base.copy()
+    perturbed.loc[3, "temperature"] = 9999.0
+
+    kwargs = {"value_cols": ("temperature",), "lags": (1, 3), "windows": (2, 3)}
+    out_base = add_temporal_features(base, **kwargs)
+    out_perturbed = add_temporal_features(perturbed, **kwargs)
+
+    feature_cols = [c for c in out_base.columns if "_lag" in c or "_roll" in c]
+    pd.testing.assert_series_equal(
+        out_base.loc[3, feature_cols], out_perturbed.loc[3, feature_cols], check_names=False
+    )
+
+
+# TP2 M23 — pas de fuite entre machines : la première ligne de chaque machine n'a pas
+# d'historique, elle ne doit pas hériter des valeurs de la machine précédente.
+def test_temporal_features_do_not_leak_across_machines():
+    df = pd.DataFrame(
+        {
+            "machine": ["MACH-01", "MACH-01", "MACH-02", "MACH-02"],
+            "timestamp": pd.to_datetime(
+                ["2025-01-01 00:00", "2025-01-01 01:00", "2025-01-01 00:00", "2025-01-01 01:00"]
+            ),
+            "temperature": [10.0, 20.0, 500.0, 600.0],
+        }
+    )
+    out = add_temporal_features(df, value_cols=("temperature",), lags=(1,), windows=(1,))
+
+    first_m2 = out[out["machine"] == "MACH-02"].iloc[0]
+    assert pd.isna(first_m2["temperature_lag1"])
+    assert pd.isna(first_m2["temperature_roll1_mean"])
