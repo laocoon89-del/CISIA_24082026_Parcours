@@ -28,7 +28,7 @@ import uuid
 from contextlib import asynccontextmanager
 
 import pandas as pd
-from fastapi import Depends, FastAPI, Header, HTTPException, Request, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, UploadFile, status
 
 import indusense.api.model_store as store
 from indusense.api.model_store import ModelBundle, get_model_bundle
@@ -166,3 +166,56 @@ def predict_tabular(
         model_version=bundle.version,
         threshold=bundle.threshold,
     )
+
+
+# --- M25 TP 3 (option) : POST /predict-image ----------------------------------
+# Objectif : refuser (422) tout fichier qui n'est pas réellement une image.
+# Aucun modèle vision n'est déployé : la route VALIDE l'entrée, elle ne prédit rien.
+
+# Signatures binaires (« magic bytes ») : les premiers octets qui identifient le
+# format RÉEL du fichier, quels que soient son nom ou le Content-Type annoncé.
+IMAGE_SIGNATURES: dict[str, bytes] = {
+    "image/png": b"\x89PNG\r\n\x1a\n",  # PNG : 8 octets fixés par la norme PNG
+    "image/jpeg": b"\xff\xd8\xff",  # JPEG : marqueur SOI (Start Of Image) + début de segment
+}
+# Nombre d'octets à lire pour comparer : la plus longue signature (8 pour PNG).
+SIGNATURE_BYTES = max(len(sig) for sig in IMAGE_SIGNATURES.values())
+
+
+@app.post(
+    "/predict-image",  # chemin de la route ; POST car le client ENVOIE un fichier
+    dependencies=[Depends(require_api_key)],  # même contrôle de clé que /predict-tabular → 401
+)
+async def predict_image(
+    file: UploadFile,  # fichier reçu en multipart/form-data (champ de formulaire « file »)
+) -> dict:
+    # Type MIME DÉCLARÉ par le client (ex. "image/png") ; peut être absent ou mensonger.
+    declared_type = file.content_type or ""
+    # Signature attendue pour ce type ; None si le type n'est pas un format image accepté.
+    expected_signature = IMAGE_SIGNATURES.get(declared_type)
+    # 1er contrôle : le type annoncé doit faire partie des formats acceptés.
+    if expected_signature is None:
+        # 422 : la requête est bien formée, mais son contenu est inacceptable.
+        raise HTTPException(
+            status_code=422,
+            detail=f"Type non accepté : {declared_type!r} (attendu : image/png ou image/jpeg)",
+        )
+    # Lecture des SEULS premiers octets : suffisant pour vérifier la signature.
+    head = await file.read(SIGNATURE_BYTES)
+    # 2e contrôle : fichier vide → rien à analyser.
+    if not head:
+        raise HTTPException(status_code=422, detail="Fichier image vide")
+    # 3e contrôle : le contenu réel doit commencer par la signature du type annoncé.
+    # C'est ce test qui démasque un fichier texte renommé « .png » ou mal étiqueté.
+    if not head.startswith(expected_signature):
+        raise HTTPException(
+            status_code=422,
+            detail=f"Le contenu ne correspond pas à une image {declared_type}",
+        )
+    # Tous les contrôles passent : on accuse réception, sans inventer de prédiction.
+    return {
+        "filename": file.filename,  # nom fourni par le client (information, jamais une preuve)
+        "content_type": declared_type,  # type annoncé ET vérifié par la signature
+        "status": "image_valide",  # résultat de la validation
+        "prediction": None,  # aucun modèle vision déployé : pas de score à renvoyer
+    }
