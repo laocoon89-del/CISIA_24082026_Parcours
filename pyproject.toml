@@ -92,6 +92,33 @@ dependencies = [
     # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
     # [PÉDAGOGIE] au-dessus.
     "dvc>=3.67.1",
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "fastapi>=0.111",  # API web rapide + doc /docs auto (module 25)
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "uvicorn[standard]>=0.30",  # serveur ASGI qui fait tourner l'API (module 25)
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "python-multipart>=0.0.9",  # upload de fichiers pour /predict-image (module 25)
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "prometheus-fastapi-instrumentator>=8.0.2",  # expose /metrics pour Prometheus (module 33)
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "prefect>=3.7.6",  # orchestration du flow ingest→predict→store (modules 29-30)
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "sqlalchemy>=2.0.51",  # accès base de données / upsert (module 30)
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "psycopg[binary]>=3.3.4",  # pilote PostgreSQL (module 28/30)
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "scipy>=1.18.0",  # tests statistiques pour le drift : KS (module 31)
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "evidently>=0.7.21",  # rapports de data drift (module 32)
 ]
 
 # --- [project.optional-dependencies] : dependances OPTIONNELLES --------------
