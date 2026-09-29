@@ -59,3 +59,5 @@ build/
 # [PÉDAGOGIE] EXCLUSION — ce motif retire un artefact généré, local ou sensible du périmètre
 # [PÉDAGOGIE] concerné.
 !artifacts/models/model_metadata.json
+mlflow.db
+mlflow.db
