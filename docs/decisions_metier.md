@@ -6,5 +6,6 @@ Décisions de cadrage validées, servant de preuve aux lignes correspondantes de
 |---|---|---|---|---|
 | D1 | 29/09/2026 | Finalité : signaler, pour chaque machine, un risque de panne dans les 24 h afin d'anticiper une intervention de maintenance. Utilisateurs : équipe maintenance et responsable de ligne. | Ludovic Bourreau (porteur du projet) | Finalité et utilisateurs |
 | D2 | 29/09/2026 | Le modèle assiste la décision sans la prendre : toute intervention est décidée par un humain. Hors périmètre : arrêt automatique d'une machine, décision de sécurité des personnes, machines ou capteurs absents des données d'entraînement. | Ludovic Bourreau (porteur du projet) | Décision assistée, hors périmètre et supervision humaine |
+| D3 | 29/09/2026 | Interdiction d'utiliser le modèle ou ses alertes pour évaluer ou surveiller des personnes (par exemple, rapprochement des alertes et des équipes, des badges ou des postes). Les données opérateur de la source brute restent exclues du Gold et des features. | Ludovic Bourreau (porteur du projet) | Interdiction de surveiller les opérateurs |
 
 Toute modification de ces décisions doit être ajoutée ici (nouvelle ligne datée), puis reportée dans la model card.
