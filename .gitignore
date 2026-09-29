@@ -61,3 +61,4 @@ build/
 !artifacts/models/model_metadata.json
 mlflow.db
 mlflow.db
+mlartifacts/
