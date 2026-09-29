@@ -86,7 +86,7 @@ def test_ready_returns_exact_503_when_model_is_unavailable() -> None:
     # [PÉDAGOGIE] ORACLE — l'assertion compare le résultat observé au contrat attendu par ce test.
     assert response.status_code == 503
     # [PÉDAGOGIE] ORACLE — l'assertion compare le résultat observé au contrat attendu par ce test.
-    assert response.json() == {"detail": "Modele non charge"}
+    assert response.json() == {"detail": "Modèle non chargé"}
 
 
 # [PÉDAGOGIE] BLOC `test_predict_tabular_returns_exact_503_after_auth_and_validation` — ce test
@@ -106,4 +106,4 @@ def test_predict_tabular_returns_exact_503_after_auth_and_validation() -> None:
     # [PÉDAGOGIE] ORACLE — l'assertion compare le résultat observé au contrat attendu par ce test.
     assert response.status_code == 503
     # [PÉDAGOGIE] ORACLE — l'assertion compare le résultat observé au contrat attendu par ce test.
-    assert response.json() == {"detail": "Modele non charge"}
+    assert response.json() == {"detail": "Modèle non chargé"}
