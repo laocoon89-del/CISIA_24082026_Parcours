@@ -27,7 +27,7 @@ repos:
   # [PÉDAGOGIE] CLÉ `repo` — ce champ déclaratif participe au contrat de configuration.
   - repo: https://github.com/psf/black
     # [PÉDAGOGIE] CLÉ `rev` — ce champ déclaratif participe au contrat de configuration.
-    rev: 24.8.0
+    rev: 26.5.1
     # [PÉDAGOGIE] CLÉ `hooks` — ce champ déclaratif participe au contrat de configuration.
     hooks:
       # [PÉDAGOGIE] CLÉ `id` — ce champ déclaratif participe au contrat de configuration.
