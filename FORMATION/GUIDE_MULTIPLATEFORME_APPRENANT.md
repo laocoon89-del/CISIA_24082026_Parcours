@@ -349,7 +349,28 @@ répond `permission denied` sur `/var/run/docker.sock`, ne relancez pas tout ave
 
 ## 10. M29 et M30 - Prefect et idempotence
 
-Commandes communes :
+Au debut du jalon 07, `flows/pipeline.py` est volontairement absent : creez-le
+pendant M29. Sa version de reference n'apparait qu'au jalon 08. Ne lancez la
+premiere commande ci-dessous qu'apres cette creation.
+
+Avant toute commande Prefect, forcez l'orchestration locale afin de ne pas
+heriter d'un profil Prefect Cloud actif sur le poste :
+
+```powershell
+# Windows
+$env:PREFECT_PROFILE = 'ephemeral'
+$env:PREFECT_SERVER_ANALYTICS_ENABLED = 'false'
+$env:PREFECT_CLOUD_ENABLE_ORCHESTRATION_TELEMETRY = 'false'
+```
+
+```bash
+# macOS et Linux
+export PREFECT_PROFILE=ephemeral
+export PREFECT_SERVER_ANALYTICS_ENABLED=false
+export PREFECT_CLOUD_ENABLE_ORCHESTRATION_TELEMETRY=false
+```
+
+Commandes communes, apres creation de `flows/pipeline.py` :
 
 ```text
 uv run python flows/pipeline.py

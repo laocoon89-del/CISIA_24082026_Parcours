@@ -5,11 +5,17 @@
 
 Objectif : passer d'un script a un pipeline orchestre, rejouable et idempotent.
 
-Recu par le jalon : stack M28, squelette `flows/pipeline.py`, donnees locales et
-demo d'idempotence. Aucun corrige PayGuard.
+Recu par le jalon : stack M28, donnees locales et demo d'idempotence.
+`flows/pipeline.py` est volontairement absent : il est a creer pendant M29 et
+sa version de reference n'apparait qu'au jalon 08. Aucun corrige PayGuard.
 
-A faire : decomposer en tasks/flow, nommer les runs, gerer reprise et cache,
-prouver qu'un second passage ne duplique pas les sorties.
+A faire : creer `flows/pipeline.py`, decomposer en tasks/flow, nommer les runs,
+gerer reprise et cache, puis prouver qu'un second passage ne duplique pas les
+sorties.
+
+Avant la preuve, forcer le profil Prefect local `ephemeral` comme indique dans
+le guide multiplateforme. Ne lancer la premiere commande qu'apres avoir cree
+`flows/pipeline.py` pendant M29.
 
 Preuve :
 
