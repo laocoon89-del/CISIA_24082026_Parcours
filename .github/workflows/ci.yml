@@ -79,11 +79,23 @@ jobs:
   build:
     needs: quality
     runs-on: ubuntu-latest
+    # [PÉDAGOGIE] PROCÉDURE — l'ordre des étapes rend la reconstruction et les contrôles
+    # [PÉDAGOGIE] reproductibles.
     steps:
+      # [PÉDAGOGIE] DÉPENDANCE CI — l'action est épinglée à une version majeure explicitement
+      # [PÉDAGOGIE] revue.
       - uses: actions/checkout@v4
+      # [PÉDAGOGIE] DÉPENDANCE CI — l'action est épinglée à une version majeure explicitement
+      # [PÉDAGOGIE] revue.
       - uses: actions/setup-python@v5
+        # [PÉDAGOGIE] PARAMÈTRES — ces valeurs configurent l'action sans cacher la décision dans
+        # [PÉDAGOGIE] un script externe.
         with:
+          # [PÉDAGOGIE] CLÉ `python-version` — ce champ déclaratif participe au contrat de
+          # [PÉDAGOGIE] configuration.
           python-version: "3.13"
+      # [PÉDAGOGIE] DÉPENDANCE CI — l'action est épinglée à une version majeure explicitement
+      # [PÉDAGOGIE] revue.
       - uses: astral-sh/setup-uv@v3
       - name: Build wheel
         run: uv build

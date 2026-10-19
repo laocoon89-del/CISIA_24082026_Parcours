@@ -1,0 +1,57 @@
+# [PÉDAGOGIE] ============================================================================
+# [PÉDAGOGIE] FICHIER — FORMATION/EXERCICES/tp_drift_indusense/pyproject.toml
+# [PÉDAGOGIE] MODULE  — M23–M24 — paquet Python, environnement uv et outillage
+# [PÉDAGOGIE] RÔLE    — Centraliser l'identité du paquet, ses dépendances et les règles communes
+# [PÉDAGOGIE]           aux outils.
+# [PÉDAGOGIE] THÉORIE — pyproject.toml est une source déclarative ; uv matérialise cet état dans
+# [PÉDAGOGIE]           un environnement
+# [PÉDAGOGIE]           • le verrou sépare la demande de dépendances de leur résolution exacte
+# [PÉDAGOGIE]           • les extras évitent d'imposer les outils de développement au runtime
+# [PÉDAGOGIE]             minimal
+# [PÉDAGOGIE] À VOIR  — uv sync --frozen doit reproduire l'environnement sans réécrire le verrou.
+# [PÉDAGOGIE] PIÈGE   — Ajouter une dépendance sans mettre à jour puis valider le verrou crée un
+# [PÉDAGOGIE]           dépôt non reproductible.
+# [PÉDAGOGIE] GARDE   — Toutes les lignes marquées [PÉDAGOGIE] sont des commentaires : elles
+# [PÉDAGOGIE]           guident la lecture sans changer l'exécution.
+# [PÉDAGOGIE] ============================================================================
+
+# [PÉDAGOGIE] SECTION — `[project]` regroupe des réglages lus par le même outil ou composant.
+[project]
+# [PÉDAGOGIE] RÉGLAGE `name` — valeur déclarative lue par l'outil associé à cette section.
+name = "indusense-drift-mirror"
+# [PÉDAGOGIE] RÉGLAGE `version` — valeur déclarative lue par l'outil associé à cette section.
+version = "1.0.0"
+# [PÉDAGOGIE] RÉGLAGE `description` — valeur déclarative lue par l'outil associé à cette section.
+description = "Miroir autonome CISIA Sprint 3 — drift InduSense"
+# [PÉDAGOGIE] RUNTIME — borne les versions Python avec lesquelles le projet est garanti.
+requires-python = ">=3.13,<3.14"
+# [PÉDAGOGIE] DÉPENDANCES — le manifeste exprime les besoins ; uv.lock en fige la résolution
+# [PÉDAGOGIE] exacte.
+dependencies = [
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "numpy>=1.26",
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "pandas>=2.1",
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "scipy>=1.11",
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "scikit-learn>=1.4",
+    # [PÉDAGOGIE] ÉLÉMENT — cette entrée appartient à la liste déclarative ouverte juste
+    # [PÉDAGOGIE] au-dessus.
+    "joblib>=1.3",
+]
+
+# [PÉDAGOGIE] SECTION — `[project.optional-dependencies]` regroupe des réglages lus par le même
+# [PÉDAGOGIE] outil ou composant.
+[project.optional-dependencies]
+# [PÉDAGOGIE] RÉGLAGE `dev` — valeur déclarative lue par l'outil associé à cette section.
+dev = ["pytest>=8.0"]
+
+# [PÉDAGOGIE] SECTION — `[tool.uv]` regroupe des réglages lus par le même outil ou composant.
+[tool.uv]
+# [PÉDAGOGIE] RÉGLAGE `package` — valeur déclarative lue par l'outil associé à cette section.
+package = false

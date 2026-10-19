@@ -183,10 +183,12 @@ line-length = 100
 # [PÉDAGOGIE] RÉGLAGE `target-version` — valeur déclarative lue par l'outil associé à cette
 # [PÉDAGOGIE] section.
 target-version = "py313"
-# Dossiers a EXCLURE de l'analyse (environnements virtuels, dossiers de build).
+# Dossiers a EXCLURE de l'analyse : environnements virtuels, sorties de build
+# et TPs autonomes. Chaque TP de FORMATION/EXERCICES est verifie avec son propre
+# pyproject/uv.lock afin de ne pas melanger ses regles avec celles d'InduSense.
 # [PÉDAGOGIE] RÉGLAGE `extend-exclude` — valeur déclarative lue par l'outil associé à cette
 # [PÉDAGOGIE] section.
-extend-exclude = [".venv*", "venv*", "dist", "build"]
+extend-exclude = [".venv*", "venv*", "dist", "build", "FORMATION/EXERCICES"]
 
 # --- [tool.ruff.lint] : quelles familles de regles ruff active-t-on ---------
 # [PÉDAGOGIE] SECTION — `[tool.ruff.lint]` regroupe des réglages lus par le même outil ou
@@ -209,6 +211,11 @@ ignore = ["B008"]
 # Meme largeur de ligne que ruff (les deux outils restent coherents).
 # [PÉDAGOGIE] STYLE — partage la même limite entre formateur, apprenants et CI.
 line-length = 100
+# Les exercices sont des projets autonomes avec leur propre pyproject.toml.
+# Le controle qualite du depot racine ne doit donc pas leur imposer ses regles.
+# [PÉDAGOGIE] RÉGLAGE `extend-exclude` — valeur déclarative lue par l'outil associé à cette
+# [PÉDAGOGIE] section.
+extend-exclude = '(^|/)FORMATION/EXERCICES/'
 
 # --- [tool.pytest.ini_options] : configuration des tests pytest -------------
 # [PÉDAGOGIE] SECTION — `[tool.pytest.ini_options]` regroupe des réglages lus par le même outil ou
