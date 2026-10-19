@@ -80,6 +80,11 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Request, UploadFile
 # plus loin, pour attacher un identifiant de requête à chaque ligne de log.
 from loguru import logger
 
+# M33 : `prometheus_client` est la bibliothèque officielle Prometheus pour Python
+# (l'Instrumentator s'appuie dessus). On l'utilise pour déclarer NOS métriques
+# métier, en plus des métriques HTTP automatiques.
+from prometheus_client import Counter, Gauge
+
 # `Instrumentator` (de prometheus-fastapi-instrumentator) : un outil qui ajoute
 # AUTOMATIQUEMENT des métriques à l'API (nombre de requêtes, latences, codes de
 # réponse…) et les expose sur une route /metrics au format attendu par
@@ -122,6 +127,27 @@ from indusense.features.temporal import add_temporal_features
 #   - `select_features` : isole les colonnes à donner au modèle (retire la cible).
 from indusense.models.tabular import predict_proba, select_features
 
+# --- M33 : métriques métier ---------------------------------------------------
+# Déclarées au niveau MODULE : une métrique Prometheus s'enregistre une seule fois
+# par processus (la redéclarer dans une fonction lèverait « Duplicated timeseries »).
+
+# GAUGE = valeur qui monte ET descend (ici un interrupteur 0/1). Elle répond à
+# « le modèle est-il chargé ? », ce que /health (processus vivant) ne dit pas.
+MODEL_LOADED = Gauge(
+    "indusense_model_loaded",
+    "1 si le modèle tabulaire est chargé, 0 sinon",
+)
+
+# COUNTER = compteur qui ne fait que MONTER (remis à 0 seulement au redémarrage).
+# Label `decision` : 2 valeurs possibles (alerte/ok) → cardinalité bornée.
+# Pas de label `machine_id` : une série par machine ferait exploser le nombre de
+# séries (cardinalité) et exposerait une donnée métier dans /metrics (fuite M26).
+PREDICTIONS_TOTAL = Counter(
+    "indusense_predictions",  # le client ajoute lui-même le suffixe `_total`
+    "Nombre de prédictions tabulaires servies, par décision",
+    ["decision"],
+)
+
 
 # -----------------------------------------------------------------------------
 #  LIFESPAN : ce qu'on fait au DÉMARRAGE et à l'ARRÊT de l'application.
@@ -136,6 +162,8 @@ from indusense.models.tabular import predict_proba, select_features
 # [PÉDAGOGIE] l'effet de bord annoncé.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # M33 : état prudent par défaut — « pas chargé » tant que la preuve n'existe pas.
+    MODEL_LOADED.set(0)
     # On tente de charger le modèle UNE FOIS, au démarrage du serveur.
     # [PÉDAGOGIE] ERREUR — cette frontière distingue le chemin nominal de la stratégie explicite
     # [PÉDAGOGIE] de récupération.
@@ -146,6 +174,8 @@ async def lifespan(app: FastAPI):
         #   - `settings.model_dir`         : dossier où trouver le modèle.
         #   - `settings.decision_threshold`: seuil de décision configuré.
         store._BUNDLE = store.load_bundle(settings.model_dir, settings.decision_threshold)
+        # M33 : chargement réussi → la gauge passe à 1.
+        MODEL_LOADED.set(1)
         # On trace dans les logs que tout s'est bien passé.
         logger.info("Modèle chargé")
     except FileNotFoundError:
@@ -153,14 +183,18 @@ async def lifespan(app: FastAPI):
         # on ne fait PAS planter le serveur : il démarre quand même, mais sans
         # modèle. On laisse `_BUNDLE` à None...
         store._BUNDLE = None
+        # M33 : pas de modèle → la gauge reste explicitement à 0.
+        MODEL_LOADED.set(0)
         # ...et on prévient via un avertissement. Conséquence : /ready répondra
         # 503 (pas prêt) tant qu'aucun modèle n'est disponible. Démarrer malgré
         # tout permet par exemple aux sondes /health de fonctionner.
         logger.warning("Aucun modèle — /ready renverra 503")
     # `yield` = « le démarrage est terminé, l'application tourne maintenant ».
     # Tout ce qui serait écrit APRÈS ce yield s'exécuterait à l'arrêt (nettoyage,
-    # fermeture de connexions…). Ici on n'a rien de spécial à faire à l'arrêt.
+    # fermeture de connexions…).
     yield
+    # M33 : à l'arrêt, le modèle n'est plus servi → la gauge revient à 0.
+    MODEL_LOADED.set(0)
 
 
 # -----------------------------------------------------------------------------
@@ -184,7 +218,11 @@ app = FastAPI(title="InduSense API", version="0.1.0", lifespan=lifespan)
 #     métriques sur la route GET /metrics. `include_in_schema=False` cache cette
 #     route technique de la documentation Swagger (elle ne concerne pas les
 #     utilisateurs « métier », seulement les outils de supervision).
-Instrumentator().instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
+#   - M33 : `should_group_status_codes=False` garde le code exact (401, 404, 422…)
+#     au lieu de les regrouper en « 4xx » : indispensable pour isoler le taux de 401.
+Instrumentator(should_group_status_codes=False).instrument(app).expose(
+    app, endpoint="/metrics", include_in_schema=False
+)
 
 
 # -----------------------------------------------------------------------------
@@ -401,6 +439,9 @@ def predict_tabular(
     #   - `float(...)` convertit ce résultat (type numpy) en nombre Python standard,
     #     attendu par le schéma de réponse (et propre à sérialiser en JSON).
     proba = float(predict_proba(bundle.model, X)[0])
+    decision = "alerte" if proba >= bundle.threshold else "ok"
+    # M33 : on compte la prédiction servie, uniquement par décision (cardinalité 2).
+    PREDICTIONS_TOTAL.labels(decision=decision).inc()
 
     # On construit et renvoie la réponse, conforme au schéma `PredictionResponse` :
     # [PÉDAGOGIE] SORTIE — cette valeur constitue le contrat remis à l'appelant ; son type et son
@@ -413,7 +454,7 @@ def predict_tabular(
         proba_panne=proba,
         # La DÉCISION : si la proba atteint/dépasse le seuil -> "alerte", sinon "ok".
         # C'est ici qu'une probabilité (nombre) devient une recommandation lisible.
-        decision="alerte" if proba >= bundle.threshold else "ok",
+        decision=decision,
         # La version du modèle (traçabilité).
         model_version=bundle.version,
         # Le seuil utilisé (transparence sur la règle de décision).
