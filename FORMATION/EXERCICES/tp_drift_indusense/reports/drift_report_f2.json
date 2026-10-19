@@ -1,0 +1,15 @@
+{
+  "_global": {
+    "drift": true
+  },
+  "pressure_bar": {
+    "drift": false,
+    "ks_p": 4.389823145415238e-07,
+    "psi": 0.02547758469858365
+  },
+  "temperature": {
+    "drift": true,
+    "ks_p": 0.0,
+    "psi": 6.845079893393694
+  }
+}
