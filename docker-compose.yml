@@ -121,6 +121,12 @@ services:                 # 'services' = la liste de tous les conteneurs à lanc
     image: prom/prometheus:v2.53.0       # Version vérifiée et mise en cache sur le poste formateur (22/08/2026).
     # [PÉDAGOGIE] RÉSEAU — distingue le port publié sur l'hôte du port écouté dans le conteneur.
     ports: ["9090:9090"]                # Expose l'interface web de Prometheus sur le port 9090 du PC.
+    # [PÉDAGOGIE] CLÉ `extra_hosts` — ce champ déclaratif participe au contrat de configuration.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+                          # Docker Desktop fournit déjà ce nom. Cette entrée lui donne aussi une
+                          # passerelle explicite sous Docker Engine Linux, afin que Prometheus
+                          # puisse joindre l'exporteur drift lancé sur l'hôte au port 9109.
     # [PÉDAGOGIE] PERSISTANCE — dissocie les données du cycle de vie du conteneur.
     volumes: ["./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml"]
                           # On MONTE notre fichier de config local (./monitoring/prometheus.yml) à

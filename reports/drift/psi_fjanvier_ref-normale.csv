@@ -1,0 +1,3 @@
+feature,psi,ks_pvalue,verdict
+temperature,5.252667701136787,1.5113937748034192e-242,!! dérive forte
+pressure_bar,0.1613073076652888,3.754584659212371e-10,! à surveiller

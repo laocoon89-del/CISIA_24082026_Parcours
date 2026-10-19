@@ -1,6 +1,6 @@
-# Jalon actuel : 09-j5-matin-m31-m32-indusense
+# Jalon actuel : 10-j5-apres-midi-m33-m34
 
-Etat revele pour J5 matin : transfert du drift PayGuard vers InduSense M31-M32.
+Etat revele pour J5 apres-midi : drift InduSense stabilise et monitoring M33-M34.
 
 - Source locale de provenance : starter remis au precedent groupe au demarrage
   du Sprint 3, commit historique `0d02af0`.
@@ -9,8 +9,8 @@ Etat revele pour J5 matin : transfert du drift PayGuard vers InduSense M31-M32.
 - La reference data-science semantique de fin S2 (Marine) reste separee ; ses
   chiffres et artefacts ne sont pas fusionnes avec le RF starter.
 - Donnees, modele RF, metadata, package minimal et tests sont presents.
-- Aucun rapport drift pre-calcule, dashboard final ou Game Day n'est revele dans
-  ce jalon.
+- Aucun SLO rempli, regle d'alerte finale, runbook resolu ou Game Day n'est revele
+  dans ce jalon.
 
 Ce jalon n'est pas nomme `baseline_stagiaire_exacte`, car le dernier checkout
 reel de ce groupe en fin M22 n'est pas present dans les sources locales.

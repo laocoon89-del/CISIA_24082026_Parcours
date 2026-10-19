@@ -1,0 +1,32 @@
+{
+  "modele": "HistGradientBoostingClassifier(random_state=42)",
+  "features": [
+    "temperature",
+    "pressure_bar",
+    "temperature_lag1",
+    "temperature_lag3",
+    "temperature_lag6",
+    "temperature_roll3_mean",
+    "temperature_roll6_mean",
+    "pressure_bar_lag1",
+    "pressure_bar_lag3",
+    "pressure_bar_lag6",
+    "pressure_bar_roll3_mean",
+    "pressure_bar_roll6_mean",
+    "temperature_std24",
+    "temperature_delta6",
+    "pressure_bar_std24",
+    "pressure_bar_delta6"
+  ],
+  "seuil": 0.04,
+  "cout_fn_eur": 5000.0,
+  "cout_fp_eur": 200.0,
+  "validation": {
+    "periode": "décembre 2025 (split temporel, m8)",
+    "pr_auc": 0.257,
+    "roc_auc": 0.815,
+    "rappel": 0.7972,
+    "precision": 0.1205,
+    "taux_alerte": 0.3446
+  }
+}

@@ -1,0 +1,40 @@
+# [PÉDAGOGIE] ============================================================================
+# [PÉDAGOGIE] FICHIER — monitoring/grafana/provisioning/dashboards/dashboards.yml
+# [PÉDAGOGIE] MODULE  — M28 puis M33–M34 — visualisation et provisioning déclaratif
+# [PÉDAGOGIE] RÔLE    — Rendre la source de données et les tableaux de bord reproductibles sans
+# [PÉDAGOGIE]           clic manuel.
+# [PÉDAGOGIE] THÉORIE — Grafana interroge une source ; il ne stocke pas les métriques de
+# [PÉDAGOGIE]           Prometheus
+# [PÉDAGOGIE]           • le provisioning versionné permet de reconstruire le même poste
+# [PÉDAGOGIE]             d'observation
+# [PÉDAGOGIE]           • un tableau de bord doit relier signal technique, seuil et décision
+# [PÉDAGOGIE]             opératoire
+# [PÉDAGOGIE] À VOIR  — Au démarrage, Grafana doit retrouver automatiquement la datasource et les
+# [PÉDAGOGIE]           dashboards déclarés.
+# [PÉDAGOGIE] PIÈGE   — Un graphique séduisant sans unité, fenêtre ni seuil explicite peut
+# [PÉDAGOGIE]           conduire à une mauvaise décision.
+# [PÉDAGOGIE] GARDE   — Toutes les lignes marquées [PÉDAGOGIE] sont des commentaires : elles
+# [PÉDAGOGIE]           guident la lecture sans changer l'exécution.
+# [PÉDAGOGIE] ============================================================================
+
+# Provider de dashboards provisionnés (chargés automatiquement au démarrage).
+# [PÉDAGOGIE] FORMAT — versionne le contrat de provisioning interprété par Grafana.
+apiVersion: 1
+# [PÉDAGOGIE] CLÉ `providers` — ce champ déclaratif participe au contrat de configuration.
+providers:
+  # [PÉDAGOGIE] IDENTITÉ — ce nom doit permettre de retrouver rapidement la preuve dans
+  # [PÉDAGOGIE] l'interface.
+  - name: indusense
+    # [PÉDAGOGIE] CLÉ `orgId` — ce champ déclaratif participe au contrat de configuration.
+    orgId: 1
+    # [PÉDAGOGIE] CLÉ `folder` — ce champ déclaratif participe au contrat de configuration.
+    folder: ""
+    # [PÉDAGOGIE] CLÉ `type` — ce champ déclaratif participe au contrat de configuration.
+    type: file
+    # [PÉDAGOGIE] CLÉ `disableDeletion` — ce champ déclaratif participe au contrat de
+    # [PÉDAGOGIE] configuration.
+    disableDeletion: false
+    # [PÉDAGOGIE] CLÉ `options` — ce champ déclaratif participe au contrat de configuration.
+    options:
+      # [PÉDAGOGIE] CLÉ `path` — ce champ déclaratif participe au contrat de configuration.
+      path: /etc/grafana/provisioning/dashboards
