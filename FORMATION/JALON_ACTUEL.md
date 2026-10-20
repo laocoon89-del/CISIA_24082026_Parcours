@@ -1,6 +1,6 @@
-# Jalon actuel : 10-j5-apres-midi-m33-m34
+# Jalon actuel : 11-j6-matin-gameday
 
-Etat revele pour J5 apres-midi : drift InduSense stabilise et monitoring M33-M34.
+Etat revele pour J6 matin : environnement Game Day volontairement casse.
 
 - Source locale de provenance : starter remis au precedent groupe au demarrage
   du Sprint 3, commit historique `0d02af0`.
@@ -9,8 +9,8 @@ Etat revele pour J5 apres-midi : drift InduSense stabilise et monitoring M33-M34
 - La reference data-science semantique de fin S2 (Marine) reste separee ; ses
   chiffres et artefacts ne sont pas fusionnes avec le RF starter.
 - Donnees, modele RF, metadata, package minimal et tests sont presents.
-- Aucun SLO rempli, regle d'alerte finale, runbook resolu ou Game Day n'est revele
-  dans ce jalon.
+- Aucun corrige, script de casse, table des 14 pannes ou indice formateur n'est
+  revele dans ce jalon.
 
 Ce jalon n'est pas nomme `baseline_stagiaire_exacte`, car le dernier checkout
 reel de ce groupe en fin M22 n'est pas present dans les sources locales.
