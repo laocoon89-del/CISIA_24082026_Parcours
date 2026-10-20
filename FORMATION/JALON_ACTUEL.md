@@ -1,6 +1,6 @@
-# Jalon actuel : 11-j6-matin-gameday
+# Jalon actuel : 12-j6-apres-midi-retex
 
-Etat revele pour J6 matin : environnement Game Day volontairement casse.
+Etat revele pour J6 apres-midi : reprise Game Day, restauration et RETEX.
 
 - Source locale de provenance : starter remis au precedent groupe au demarrage
   du Sprint 3, commit historique `0d02af0`.
@@ -9,8 +9,8 @@ Etat revele pour J6 matin : environnement Game Day volontairement casse.
 - La reference data-science semantique de fin S2 (Marine) reste separee ; ses
   chiffres et artefacts ne sont pas fusionnes avec le RF starter.
 - Donnees, modele RF, metadata, package minimal et tests sont presents.
-- Aucun corrige, script de casse, table des 14 pannes ou indice formateur n'est
-  revele dans ce jalon.
+- Aucun nouveau code, corrige, script de casse, table des pannes ou indice
+  formateur n'est revele dans ce jalon.
 
 Ce jalon n'est pas nomme `baseline_stagiaire_exacte`, car le dernier checkout
 reel de ce groupe en fin M22 n'est pas present dans les sources locales.
